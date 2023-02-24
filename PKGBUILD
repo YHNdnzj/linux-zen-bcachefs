@@ -2,11 +2,11 @@
 # Maintainer: Jan Alexander Steffens (heftig) <heftig@archlinux.org>
 
 pkgbase=linux-zen-bcachefs
+pkgver=6.2.zen1
+pkgrel=1
 _srcname=zen-kernel
 _tag_zen=v${pkgver%.*}-${pkgver##*.}
 _commit_bcachefs='e93059a343b735971d6868492c0e1eb1f5699f69'
-pkgver=6.2.zen1
-pkgrel=1
 pkgdesc='Linux ZEN with Bcachefs support'
 url="https://github.com/zen-kernel/zen-kernel/commits/$_tag_zen"
 arch=(x86_64)
