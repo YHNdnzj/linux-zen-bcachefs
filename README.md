@@ -2,6 +2,10 @@
 
 Linux ZEN with Bcachefs support
 
+### Extra changes
+
+- [Replace all fbdev drivers with simplefb](https://fedoraproject.org/wiki/Changes/ReplaceFbdevDrivers)
+
 ### Acknowledgement
 
 - [bcachefs](https://github.com/koverstreet/bcachefs)
