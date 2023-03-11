@@ -5,6 +5,7 @@ Linux ZEN with Bcachefs support
 ### Extra changes
 
 - [Replace all fbdev drivers with simplefb](https://fedoraproject.org/wiki/Changes/ReplaceFbdevDrivers)
+- Disable deprecated EFI handover protocol (`CONFIG_EFI_HANDOVER_PROTOCOL`)
 
 ### Acknowledgement
 
