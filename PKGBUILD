@@ -2,7 +2,7 @@
 
 pkgbase=linux-zen-bcachefs
 pkgver=6.2.6.zen1
-pkgrel=1
+pkgrel=2
 _srcname=zen-kernel
 _tag_zen=v${pkgver%.*}-${pkgver##*.}
 _commit_bcachefs='99db0760eda3de003097c52bc6ce2390c96ae45d'
@@ -38,14 +38,14 @@ export KBUILD_BUILD_TIMESTAMP="$(date -Ru${SOURCE_DATE_EPOCH:+d @$SOURCE_DATE_EP
 prepare() {
   cd $_srcname
 
-  git remote add -f bcachefs ../bcachefs
-  git log --oneline --reverse "${_tag_zen}..${_commit_bcachefs}"
-  git cherry-pick -n -m1 "${_tag_zen}..${_commit_bcachefs}"
-
   echo "Setting version..."
   scripts/setlocalversion --save-scmversion
   echo "-$pkgrel" > localversion.10-pkgrel
   echo "${pkgbase#linux}" > localversion.20-pkgname
+
+  git remote add -f bcachefs ../bcachefs
+  git log --oneline --reverse "${_tag_zen}..${_commit_bcachefs}"
+  git cherry-pick -n -m1 "${_tag_zen}..${_commit_bcachefs}"
 
   local src
   for src in "${source[@]}"; do
