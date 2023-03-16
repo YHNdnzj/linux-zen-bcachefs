@@ -28,7 +28,7 @@ validpgpkeys=(
 )
 sha256sums=('SKIP'
             'SKIP'
-            '99d51f2f42f457987457518fa0d2eda5ea5166d0efff60c80347e5292c3869e9')
+            '389b7907c4a8cdc5c32f2c104c2d93a180ffa71b9bec62dd4611c348abdd687d')
 options=('!strip')
 
 export KBUILD_BUILD_HOST=archlinux
