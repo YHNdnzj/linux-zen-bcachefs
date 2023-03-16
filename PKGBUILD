@@ -1,19 +1,18 @@
 # Maintainer: Mike Yuan <me@yhndnzj.com>
-# Maintainer: Jan Alexander Steffens (heftig) <heftig@archlinux.org>
 
 pkgbase=linux-zen-bcachefs
-pkgver=6.2.zen1
+pkgver=6.2.6.zen1
 pkgrel=1
 _srcname=zen-kernel
 _tag_zen=v${pkgver%.*}-${pkgver##*.}
-_commit_bcachefs='e93059a343b735971d6868492c0e1eb1f5699f69'
+_commit_bcachefs='99db0760eda3de003097c52bc6ce2390c96ae45d'
 pkgdesc='Linux ZEN with Bcachefs support'
 url="https://github.com/zen-kernel/zen-kernel/commits/$_tag_zen"
 arch=(x86_64)
 license=(GPL2)
 makedepends=(
   bc libelf pahole cpio perl tar xz
-  xmlto python-sphinx python-sphinx_rtd_theme graphviz imagemagick texlive-latexextra
+  xmlto python-sphinx graphviz imagemagick texlive-latexextra
   git
 )
 source=(
