@@ -2,10 +2,10 @@
 
 pkgbase=linux-zen-bcachefs
 pkgver=6.2.7.zen1
-pkgrel=1
+pkgrel=2
 _srcname=zen-kernel
-_tag_zen=v${pkgver%.*}-${pkgver##*.}
-_commit_bcachefs='a2cede7c3a7ec0d2318c89837eb8c7b66340fdc6'
+_tag_zen="v${pkgver%.*}-${pkgver##*.}"
+_commit_bcachefs='b5073649befd4ab74c17a29d9ea3a2ed36ca2911'
 pkgdesc='Linux ZEN with Bcachefs support'
 url="https://github.com/zen-kernel/zen-kernel/commits/$_tag_zen"
 arch=(x86_64)
