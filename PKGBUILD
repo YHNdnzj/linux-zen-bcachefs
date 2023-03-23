@@ -1,11 +1,11 @@
 # Maintainer: Mike Yuan <me@yhndnzj.com>
 
 pkgbase=linux-zen-bcachefs
-pkgver=6.2.7.zen1
-pkgrel=2
+pkgver=6.2.8.zen1
+pkgrel=1
 _srcname=zen-kernel
 _tag_zen="v${pkgver%.*}-${pkgver##*.}"
-_commit_bcachefs='b5073649befd4ab74c17a29d9ea3a2ed36ca2911'
+_commit_bcachefs='169b584fb4c8e51aa36e4b3284f9e2e5ce6f30e4'
 pkgdesc='Linux ZEN with Bcachefs support'
 url="https://github.com/zen-kernel/zen-kernel/commits/$_tag_zen"
 arch=(x86_64)
@@ -28,7 +28,7 @@ validpgpkeys=(
 )
 sha256sums=('SKIP'
             'SKIP'
-            '389b7907c4a8cdc5c32f2c104c2d93a180ffa71b9bec62dd4611c348abdd687d')
+            '324149ec20b46e1a64176931369d829128c227f70bd3ac81e09827452b0ce769')
 options=('!strip')
 
 export KBUILD_BUILD_HOST=archlinux
