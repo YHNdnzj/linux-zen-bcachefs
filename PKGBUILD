@@ -1,19 +1,32 @@
 # Maintainer: Mike Yuan <me@yhndnzj.com>
 
 pkgbase=linux-zen-bcachefs
-pkgver=6.2.11.zen1
+pkgver=6.3.zen1
 pkgrel=1
 _srcname=zen-kernel
 _tag_zen="v${pkgver%.*}-${pkgver##*.}"
-_commit_bcachefs='fd381c355c92ad0e3abfc49c7675893ed355686f'
+_commit_bcachefs='7b2753455c261a41ce97b0dcf1d8d24beba7a42b'
 pkgdesc='Linux ZEN with Bcachefs support'
 url="https://github.com/zen-kernel/zen-kernel/commits/$_tag_zen"
 arch=(x86_64)
 license=(GPL2)
 makedepends=(
-  bc libelf pahole cpio perl tar xz
-  xmlto python-sphinx graphviz imagemagick texlive-latexextra
+  bc
+  cpio
+  gettext
   git
+  libelf
+  pahole
+  perl
+  tar
+  xz
+
+  # htmldocs
+  graphviz
+  imagemagick
+  python-sphinx
+  texlive-latexextra
+  xmlto
 )
 source=(
   "$_srcname::git+https://github.com/zen-kernel/zen-kernel?signed#tag=$_tag_zen"
@@ -21,27 +34,34 @@ source=(
   config
 )
 validpgpkeys=(
-  'ABAF11C65A2970B130ABE3C479BE3E4300411886'  # Linus Torvalds
-  '647F28654894E3BD457199BE38DBBDC86092693E'  # Greg Kroah-Hartman
-  'A2FF3A36AAA56654109064AB19802F8B0D70FC30'  # Jan Alexander Steffens (heftig)
-  'C5ADB4F3FEBBCE27A3E54D7D9AE4078033F8024D'  # Steven Barrett <steven@liquorix.net>
+  ABAF11C65A2970B130ABE3C479BE3E4300411886  # Linus Torvalds
+  647F28654894E3BD457199BE38DBBDC86092693E  # Greg Kroah-Hartman
+  A2FF3A36AAA56654109064AB19802F8B0D70FC30  # Jan Alexander Steffens (heftig)
+  C5ADB4F3FEBBCE27A3E54D7D9AE4078033F8024D  # Steven Barrett <steven@liquorix.net>
 )
-sha256sums=('SKIP'
-            'SKIP'
-            '324149ec20b46e1a64176931369d829128c227f70bd3ac81e09827452b0ce769')
+b2sums=('SKIP'
+        'SKIP'
+        '8feaf488f3ac5e5bf466f5d857e8d692af3bf3236b4814212858fbe2fa9ee42e945b290c08e26ee726295f66d582eea5ff3d36a8f60043c396c5e446b44b8ec0')
 options=('!strip')
 
 export KBUILD_BUILD_HOST=archlinux
 export KBUILD_BUILD_USER=$pkgbase
 export KBUILD_BUILD_TIMESTAMP="$(date -Ru${SOURCE_DATE_EPOCH:+d @$SOURCE_DATE_EPOCH})"
 
+_make() {
+  test -s version
+  make KERNELRELEASE="$(<version)" "$@"
+}
+
 prepare() {
   cd $_srcname
 
   echo "Setting version..."
-  scripts/setlocalversion --save-scmversion
   echo "-$pkgrel" > localversion.10-pkgrel
   echo "${pkgbase#linux}" > localversion.20-pkgname
+  make defconfig
+  make -s kernelrelease > version
+  make mrproper
 
   git remote add -f bcachefs ../bcachefs
   git log --oneline --reverse "${_tag_zen}..${_commit_bcachefs}"
@@ -58,41 +78,51 @@ prepare() {
 
   echo "Setting config..."
   cp ../config .config
-  make olddefconfig
+  _make olddefconfig
   diff -u ../config .config || :
 
-  make -s kernelrelease > version
   echo "Prepared $pkgbase version $(<version)"
 }
 
 build() {
   cd $_srcname
-  make htmldocs all
+  _make htmldocs all
 }
 
 _package() {
   pkgdesc="The $pkgdesc kernel and modules"
-  depends=(coreutils kmod initramfs)
-  optdepends=('wireless-regdb: to set the correct wireless channels of your country'
-              'linux-firmware: firmware images needed for some devices')
-  provides=(VIRTUALBOX-GUEST-MODULES WIREGUARD-MODULE KSMBD-MODULE VHBA-MODULE
-            UKSMD-BUILTIN)
-  replaces=()
+  depends=(
+    coreutils
+    initramfs
+    kmod
+  )
+  optdepends=(
+    'wireless-regdb: to set the correct wireless channels of your country'
+    'linux-firmware: firmware images needed for some devices'
+  )
+  provides=(
+    KSMBD-MODULE
+    UKSMD-BUILTIN
+    VHBA-MODULE
+    VIRTUALBOX-GUEST-MODULES
+    WIREGUARD-MODULE
+  )
+  replaces=(
+  )
 
   cd $_srcname
-  local kernver="$(<version)"
-  local modulesdir="$pkgdir/usr/lib/modules/$kernver"
+  local modulesdir="$pkgdir/usr/lib/modules/$(<version)"
 
   echo "Installing boot image..."
   # systemd expects to find the kernel here to allow hibernation
   # https://github.com/systemd/systemd/commit/edda44605f06a41fb86b7ab8128dcf99161d2344
-  install -Dm644 "$(make -s image_name)" "$modulesdir/vmlinuz"
+  install -Dm644 "$(_make -s image_name)" "$modulesdir/vmlinuz"
 
   # Used by mkinitcpio to name the kernel
   echo "$pkgbase" | install -Dm644 /dev/stdin "$modulesdir/pkgbase"
 
   echo "Installing modules..."
-  make INSTALL_MOD_PATH="$pkgdir/usr" INSTALL_MOD_STRIP=1 \
+  _make INSTALL_MOD_PATH="$pkgdir/usr" INSTALL_MOD_STRIP=1 \
     DEPMOD=/doesnt/exist modules_install  # Suppress depmod
 
   # remove build and source links
@@ -200,7 +230,11 @@ _package-docs() {
   ln -sr "$builddir/Documentation" "$pkgdir/usr/share/doc/$pkgbase"
 }
 
-pkgname=("$pkgbase" "$pkgbase-headers" "$pkgbase-docs")
+pkgname=(
+  "$pkgbase"
+  "$pkgbase-headers"
+  "$pkgbase-docs"
+)
 for _p in "${pkgname[@]}"; do
   eval "package_$_p() {
     $(declare -f "_package${_p#$pkgbase}")
