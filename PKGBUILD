@@ -1,11 +1,11 @@
 # Maintainer: Mike Yuan <me@yhndnzj.com>
 
 pkgbase=linux-zen-bcachefs
-pkgver=6.3.1.zen1
+pkgver=6.3.2.zen1
 pkgrel=1
 _srcname=zen-kernel
 _tag_zen="v${pkgver%.*}-${pkgver##*.}"
-_commit_bcachefs='ccc8737427a33228cd43d79dd0c7ed6903dedff0'
+_commit_bcachefs='799716df00709f7480f575e8fd626915bafba006'
 pkgdesc='Linux ZEN with Bcachefs support'
 url="https://github.com/zen-kernel/zen-kernel/commits/$_tag_zen"
 arch=(x86_64)
