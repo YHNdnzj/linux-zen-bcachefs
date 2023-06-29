@@ -1,11 +1,11 @@
 # Maintainer: Mike Yuan <me@yhndnzj.com>
 
 pkgbase=linux-zen-bcachefs
-pkgver=6.3.2.zen1
+pkgver=6.4.zen1
 pkgrel=1
 _srcname=zen-kernel
 _tag_zen="v${pkgver%.*}-${pkgver##*.}"
-_commit_bcachefs='799716df00709f7480f575e8fd626915bafba006'
+_commit_bcachefs='3c29e114d8735ccf310f3e9bf5db1fc5d1c6a131'
 pkgdesc='Linux ZEN with Bcachefs support'
 url="https://github.com/zen-kernel/zen-kernel/commits/$_tag_zen"
 arch=(x86_64)
@@ -26,7 +26,6 @@ makedepends=(
   imagemagick
   python-sphinx
   texlive-latexextra
-  xmlto
 )
 source=(
   "$_srcname::git+https://github.com/zen-kernel/zen-kernel?signed#tag=$_tag_zen"
@@ -41,7 +40,7 @@ validpgpkeys=(
 )
 b2sums=('SKIP'
         'SKIP'
-        '8feaf488f3ac5e5bf466f5d857e8d692af3bf3236b4814212858fbe2fa9ee42e945b290c08e26ee726295f66d582eea5ff3d36a8f60043c396c5e446b44b8ec0')
+        '610b0d8a8776609ccd7905fcdb5ef2d7e300a39da6fd3183c5a12df972c1bac08e30113f49b7bac6997aa0717606fe6250c44280b5f4452ce90540a195b7c88f')
 options=('!strip')
 
 export KBUILD_BUILD_HOST=archlinux
@@ -122,7 +121,7 @@ _package() {
   echo "$pkgbase" | install -Dm644 /dev/stdin "$modulesdir/pkgbase"
 
   echo "Installing modules..."
-  _make INSTALL_MOD_PATH="$pkgdir/usr" INSTALL_MOD_STRIP=1 \
+  ZSTD_CLEVEL=19 _make INSTALL_MOD_PATH="$pkgdir/usr" INSTALL_MOD_STRIP=1 \
     DEPMOD=/doesnt/exist modules_install  # Suppress depmod
 
   # remove build and source links
